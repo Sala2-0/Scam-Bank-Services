@@ -1,7 +1,7 @@
 // Helper functions file
 
-#ifndef HELPERS_H
-#define HELPERS_H
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
 
 #include <iostream>
 #include <chrono>

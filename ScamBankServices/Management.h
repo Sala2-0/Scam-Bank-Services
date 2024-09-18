@@ -1,5 +1,8 @@
 // Account management section file (Logged in)
 
+#ifndef MANAGEMENT_H
+#define MANAGEMENT_H
+
 #include <iostream>
 #include <limits>
 #include <cstdlib>
@@ -9,11 +12,11 @@
 
 // User defined files
 #include "Account.h"
-#include "Helpers.h"
+#include "Functions.h"
 
 using namespace std;
 
-void management(shared_ptr<Account> targetAccount, bool &loggedIn, char &option) {
+void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option) {
     if (loggedIn) {
         while (loggedIn) {
 
@@ -92,3 +95,5 @@ void management(shared_ptr<Account> targetAccount, bool &loggedIn, char &option)
         }
     }
 }
+
+#endif
