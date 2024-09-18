@@ -45,16 +45,20 @@ void withdrawFunction(Account &acc, double amount) {
 }
 
 // Encrypt password with asterisks
-std::string getPasswordInput() {
+std::string encryptPassword() {
     std::string password;
     char ch;
-    while ((ch = _getch()) != '\r') {  // '\r' corresponds to Enter key
+    while ((ch = _getch()) != '\r') {  // '\r' is Enter key
+        if (ch == 27) { return ""; } // 27 is ASCII code for ESC key , ESC key pressed, return empty string
+
         if (ch == '\b') { // Handle backspace
             if (!password.empty()) {
-                std::cout << "\b \b";
+                std::cout << "\b \b"; // Erase character from console
                 password.pop_back();
             }
-        } else {
+        }
+        
+        else {
             password.push_back(ch);
             std::cout << '*';  // Hide password input with '*'
         }
@@ -102,6 +106,81 @@ void transactionHistoryFunction(Account &acc, const std::string &x, double amoun
     std::string str = x + stream.str();
 
     acc.addTransactionHistory(str);
+}
+
+// Cancel username input? function
+std::string getUsernameInput() {
+    std::string username;
+    char ch;
+
+    while ((ch = _getch()) != '\r') { // '\r' is Enter key
+        if (ch == 27) { return ""; } // 27 is ASCII code for ESC key , ESC key pressed, return empty string
+
+        if (ch == '\b') { // Handle backspace
+            if (!username.empty()) {
+                std::cout << "\b \b"; // Erase character from console
+                username.pop_back();
+            }
+        }
+
+        else {
+            username.push_back(ch);
+            std::cout << ch;
+        }
+    }
+
+    std::cout << std::endl;
+    return username;
+}
+
+// Cancel password input? function
+std::string getPasswordInput() {
+    std::string password;
+    char ch;
+
+    while ((ch = _getch()) != '\r') { // '\r' is Enter key
+        if (ch == 27) { return ""; } // 27 is ASCII code for ESC key , ESC key pressed, return empty string
+
+        if (ch == '\b') { // Handle backspace
+            if (!password.empty()) {
+                std::cout << "\b \b"; // Erase character from console
+                password.pop_back();
+            }
+        }
+
+        else {
+            password.push_back(ch);
+            std::cout << ch;
+        }
+    }
+
+    std::cout << std::endl;
+    return password;
+}
+
+// Cancel unique id input? function
+std::string getUniqueIdInput() {
+    std::string uniqueId;
+    char ch;
+
+    while ((ch = _getch()) != '\r') { // '\r' is Enter key
+        if (ch == 27) { return ""; } // ESC key pressed, return empty string
+        
+        if (ch == '\b') { // Handle backspace
+            if (!uniqueId.empty()) {
+                std::cout << "\b \b"; // Erase character from console
+                uniqueId.pop_back();
+            }
+        }
+        
+        else if (isdigit(ch)) {  // Only allow numeric input
+            uniqueId.push_back(ch);
+            std::cout << ch;
+        }
+    }
+
+    std::cout << std::endl;
+    return uniqueId;
 }
 
 #endif

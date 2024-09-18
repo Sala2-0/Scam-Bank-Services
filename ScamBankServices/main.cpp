@@ -67,10 +67,12 @@ int main() {
 
             // Option 1 -- Login with username
             if (option == '1') {
-                cout << "Username: ";
-                string loginUsername; cin >> loginUsername;
+                cout << "[ESC] Back to login menu" << endl;
+                cout << "\nUsername: ";
+                string loginUsername = getUsernameInput();
 
                 system("cls");
+                if (loginUsername.empty()) { continue; }
 
                 // Check if vector is empty
                 if (accounts.size() != 0) {
@@ -94,14 +96,14 @@ int main() {
                     system("cls");
                 }
 
-                system("cls");
-
                 // Password section
                 if (accountFound == true) {
-                    cout << "Password: ";
-                    string loginPassword = getPasswordInput();
+                    cout << "[ESC] Back to login menu" << endl;
+                    cout << "\nPassword: ";
+                    string loginPassword = encryptPassword();
 
                     system("cls");
+                    if (loginPassword.empty()) { continue; }
 
                     // Correct password
                     if (loginPassword == password) {
@@ -124,21 +126,15 @@ int main() {
 
             // Option 2 -- Login with unique id
             else if (option == '2') {
-                cout << "Unique id: ";
-                int loginId; cin >> loginId;
+                cout << "[ESC] Back to login menu" << endl;
+                cout << "\nUnique id: ";
+                string temp = getUniqueIdInput();
 
                 system("cls");
+                if (temp.empty()) { continue; }
 
-                // If user inputs everything other than integers
-                if (cin.fail()) {
-                    cout << "Incorrect format" << endl;
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-                    pause(1);
-                    system("cls");
-                }
-
+                int loginId = stoi(temp);
+        
                 // Check if vector is empty
                 if (accounts.size() != 0) {
                     // Iterate through all accounts in the vector looking for the username
@@ -165,23 +161,26 @@ int main() {
 
                 // Password section
                 if (accountFound == true) {
-                    cout << "Password: ";
-                    string loginPassword = getPasswordInput();
+                    cout << "[ESC] Back to login menu" << endl;
+                    cout << "\nPassword: ";
+                    string loginPassword = encryptPassword();
 
                     system("cls");
-
+                    if (loginPassword.empty()) { continue; }
+                    
                     // Correct password
                     if (loginPassword == password) {
                         loggedIn = true;
                         cout << "Welcome " << targetAccount->getUsername() << "!"
                         << " Redirecting you to account management shortly" << endl;
                         
-                        pause(3);
+                        pause(2);
                         system("cls");
                     }
                     
                     // Incorrect password
                     else {
+                        targetAccount = nullptr;
                         cout << "Incorrect password" << endl;
                         pause(1);
                         system("cls");
@@ -194,11 +193,12 @@ int main() {
         else if (option == '2') {
             string username;
 
-            // Fail check username
+            // Check if username is duplicate
             while (true) {
-                cout << "Create a username: ";
-                cin >> username;
-
+                cout << "[ESC] Back to login menu" << endl;
+                cout << "\nCreate a username: ";
+                username = getUsernameInput();
+                
                 if (!isUsernameUnique(username, accounts)) {
                     cout << "Username already exists" << endl;
 
@@ -209,45 +209,39 @@ int main() {
                 break;
             }
 
+            system("cls");
+            if (username.empty()) { continue; }
+
+            cout << "[ESC] Back to login menu" << endl;
             cout << "\nCreate a password: ";
-            string password;
-
-            // Fail check password
-            while (true) {
-                cin >> password;
-                if (cin.fail()) {
-                    cout << "Incorrect format" << endl;
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-                    pause(1);
-                    system("cls");
-                    continue;
-                }
-                break;
-            }
+            string password = getPasswordInput();
 
             system("cls");
+            if (password.empty()) { continue; }
 
             string confirmPassword;
             do {
+                cout << "[ESC] Back to login menu" << endl;
                 cout << "\nConfirm password: ";
-                confirmPassword = getPasswordInput();
+                confirmPassword = encryptPassword();
+
+                system("cls");
+                if (confirmPassword.empty()) { break; }
 
                 if (confirmPassword != password) {
-                    cout << "Password does not match: ";
+                    cout << "Password does not match";
                     pause(1);
                     system("cls");
                 }
             }
             while (confirmPassword != password);
 
-            system("cls");
+            if (confirmPassword.empty()) { continue; }
 
             // Constructor when account created
             accounts.push_back(make_unique<Account>(username, password));
 
-            pause(3);
+            pause(2);
             system("cls");
         }
     }

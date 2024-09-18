@@ -70,12 +70,12 @@ void management(shared_ptr<Account> targetAccount, bool &loggedIn, char &option)
             else if (option == 'h') {
                 targetAccount->showTransactionHistory();
 
-                cout << "\n[q] Back to main menu" << endl;
+                cout << "\n[ESC] Back to main menu" << endl;
 
                 while (true) {
                     option = _getch();
 
-                    if (option == 'q') { break; }
+                    if (option == 27) { break; }
                 }
                 system("cls");
             }
