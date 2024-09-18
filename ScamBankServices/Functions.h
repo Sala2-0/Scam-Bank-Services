@@ -101,11 +101,11 @@ bool isUsernameUnique(const std::string& username, const std::vector<std::shared
 // Add transaction history function
 void transactionHistoryFunction(Account &acc, const std::string &x, double amount) {
     std::ostringstream stream;
-    stream.precision(2);
-    stream << std::fixed << amount;
-    std::string str = x + stream.str();
+    stream.precision(2); // Rounds stream to 2 decimals
+    stream << std::fixed << amount; // Converts amount (double) to string
+    std::string str = x + stream.str(); // Concatenates x (+ or -) and the converted double
 
-    acc.addTransactionHistory(str);
+    acc.addTransactionHistory(str); // Calls member method for acc
 }
 
 // Cancel username input? function
