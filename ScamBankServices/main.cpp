@@ -3,7 +3,7 @@
 
     NOTE:
     -   use _getch() from conio.h library when prompting user to input option
-        involcing multiple choice
+        involving multiple choice
 */ 
 
 #include <iostream>
@@ -15,12 +15,13 @@
 
 // User defined files
 #include "Account.h"
-#include "Pause.h"
+#include "Helpers.h"
+#include "Management.h"
 
 using namespace std;
 
 int main() {
-    int option;
+    char option;
     bool loggedIn {false};
 
     // Vector of smart pointers containing Accounts class
@@ -30,13 +31,8 @@ int main() {
     shared_ptr<Account> targetAccount = nullptr;
 
     do {
-        if (loggedIn == true) {
-            cout << "Account management has not been developed yet. Please come back later" << endl;
-            targetAccount = nullptr;
-            loggedIn = false;
-            pause(3);
-            system("cls");
-        }
+        // Logged in function
+        management(targetAccount, loggedIn, option);
 
         // Main menu
         cout << "=== Welcome to Scam Bank Services! ===\n" << endl;
@@ -88,18 +84,11 @@ int main() {
                             accountFound = true;
                             break;
                         }
-
-                        // If no username matches
-                        else {
-                            cout << "Username not found";
-                            pause(1);
-                            system("cls");
-                        }
                     }
                 }
 
-                // If vector is empty
-                else {
+                // If vector is empty / no accounts found
+                if (!accountFound) {
                     cout << "Username not found";
                     pause(1);
                     system("cls");
@@ -110,7 +99,7 @@ int main() {
                 // Password section
                 if (accountFound == true) {
                     cout << "Password: ";
-                    string loginPassword; cin >> loginPassword;
+                    string loginPassword = getPasswordInput();
 
                     system("cls");
 
@@ -132,6 +121,7 @@ int main() {
                     }
                 }
             }
+
             // Option 2 -- Login with unique id
             else if (option == '2') {
                 cout << "Unique id: ";
@@ -161,18 +151,11 @@ int main() {
                             accountFound = true;
                             break;
                         }
-
-                        // If no unique id matches
-                        else {
-                            cout << "Unique id not found";
-                            pause(1);
-                            system("cls");
-                        }
                     }
                 }
 
-                // If vector is empty
-                else {
+                // If vector is empty / no accounts found
+                if (!accountFound) {
                     cout << "Unique id not found";
                     pause(1);
                     system("cls");
@@ -183,7 +166,7 @@ int main() {
                 // Password section
                 if (accountFound == true) {
                     cout << "Password: ";
-                    string loginPassword; cin >> loginPassword;
+                    string loginPassword = getPasswordInput();
 
                     system("cls");
 
@@ -209,21 +192,53 @@ int main() {
 
         // Option 2 -- Create account
         else if (option == '2') {
-            cout << "Create a username: ";
-            string username; cin >> username;
-            
+            string username;
+
+            // Fail check username
+            while (true) {
+                cout << "Create a username: ";
+                cin >> username;
+
+                if (!isUsernameUnique(username, accounts)) {
+                    cout << "Username already exists" << endl;
+
+                    pause(2);
+                    system("cls");
+                    continue;
+                }
+                break;
+            }
+
             cout << "\nCreate a password: ";
-            string password; cin >> password;
+            string password;
+
+            // Fail check password
+            while (true) {
+                cin >> password;
+                if (cin.fail()) {
+                    cout << "Incorrect format" << endl;
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+                    pause(1);
+                    system("cls");
+                    continue;
+                }
+                break;
+            }
 
             system("cls");
 
-            cout << "\nConfirm password: ";
             string confirmPassword;
             do {
-                cin >> confirmPassword;
+                cout << "\nConfirm password: ";
+                confirmPassword = getPasswordInput();
 
-                if (confirmPassword != password)
-                { cout << "Password does not match: "; system("cls");}
+                if (confirmPassword != password) {
+                    cout << "Password does not match: ";
+                    pause(1);
+                    system("cls");
+                }
             }
             while (confirmPassword != password);
 
