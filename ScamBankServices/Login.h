@@ -1,3 +1,10 @@
+/*
+Login function file
+
+This file exists to create a login function that gets called in 'main.cpp' instead
+    of implementing the code in 'main.cpp' to make code maintenance easier
+*/
+
 #ifndef LOGIN_H
 #define LOGIN_H
 

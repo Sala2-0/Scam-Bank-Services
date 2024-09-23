@@ -1,4 +1,8 @@
-// Account header file
+/*
+Account class file
+
+This file is the declaration of "Account" class
+*/
 
 #ifndef ACCOUNT_H
 #define ACCOUNT_H
@@ -19,7 +23,7 @@ class Account {
 
     public:
     Account(const std::string user, const std::string pass);
-
+    ~Account();
 
     // Deposit
     bool deposit(double amount);

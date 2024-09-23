@@ -1,9 +1,9 @@
 /*
-    Main file
+Main file
 
-    NOTE:
-    -   use _getch() from conio.h library when prompting user to input option
-        involving multiple choice
+NOTE:
+-   use _getch() from conio.h library when prompting user to input option
+    involving multiple choice
 */ 
 
 #include <iostream>

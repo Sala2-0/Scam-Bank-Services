@@ -1,4 +1,9 @@
-// Account management section file (Logged in)
+/*
+Account management section file
+
+This file exists to create a logged in function that gets called in 'main.cpp' instead
+    of implementing the code in 'main.cpp' to make code maintenance easier
+*/
 
 #ifndef MANAGEMENT_H
 #define MANAGEMENT_H
@@ -43,7 +48,7 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
 
             // Option -- Deposit
             if (option == 'd') {
-                double depositAmount = getValidAmount("Amount: ");
+                double depositAmount = getValidAmount();
                     
                 // Minimum desposit amount is 200
                 if (depositAmount < 200.0) {
@@ -62,7 +67,7 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
 
             // Option -- Withdraw
             else if (option == 'w') {
-                double withdrawAmount = getValidAmount("Amount: ");
+                double withdrawAmount = getValidAmount();
                     
                 // Withdrawing
                 withdrawFunction(*targetAccount, withdrawAmount);
