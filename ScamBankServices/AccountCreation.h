@@ -18,6 +18,7 @@ This file exists to create an account creation function that gets called in 'mai
 // User defined files
 #include "Account.h"
 #include "Functions.h"
+#include "AccountStoring.h"
 
 using namespace std;
 
@@ -31,7 +32,7 @@ void accountCreation(vector<shared_ptr<Account>> &accounts) {
     while (true) {
         cout << "[ESC] Back to login menu" << endl;
         cout << "\nCreate a username: ";
-        username = getUsernameInput();
+        username = getInput();
         
         if (!isUsernameUnique(username, accounts)) {
             cout << "Username already exists" << endl;
@@ -49,7 +50,7 @@ void accountCreation(vector<shared_ptr<Account>> &accounts) {
     // Password creation
     cout << "[ESC] Back to login menu" << endl;
     cout << "\nCreate a password: ";
-    string password = getPasswordInput();
+    string password = getInput();
 
     system("cls");
     if (password.empty()) { return; }
@@ -76,7 +77,8 @@ void accountCreation(vector<shared_ptr<Account>> &accounts) {
     if (confirmPassword.empty()) { return; }
 
     // Constructor when account created
-    accounts.push_back(make_unique<Account>(username, password));
+    accounts.push_back(make_shared<Account>(username, password));
+    saveAccountsToFile(accounts);
 
     pause(2);
     system("cls");

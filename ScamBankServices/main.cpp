@@ -19,6 +19,7 @@ NOTE:
 #include "Management.h"
 #include "AccountCreation.h"
 #include "Login.h"
+#include "AccountStoring.h"
 
 using namespace std;
 
@@ -29,12 +30,17 @@ int main() {
     // Vector of smart pointers containing Accounts class
     vector<shared_ptr<Account>> accounts;
 
+    // Load accounts from file when the program starts
+    loadAccountsFromFile(accounts);
+
     // Shared pointer will point to account when logged in for full access
     shared_ptr<Account> targetAccount = nullptr;
 
+    system("cls"); // Clean console after loading data from "accounts.txt"
+
     do {
         // Logged in function
-        management(targetAccount, loggedIn, option);
+        management(targetAccount, loggedIn, option, accounts);
 
         // Main menu
         cout << "=== Welcome to Scam Bank Services! ===\n" << endl;

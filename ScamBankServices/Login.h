@@ -40,7 +40,7 @@ void login(vector<shared_ptr<Account>> &accounts, shared_ptr<Account> &targetAcc
     if (option == '1') {
         cout << "[ESC] Back to login menu" << endl;
         cout << "\nUsername: ";
-        string loginUsername = getUsernameInput();
+        string loginUsername = getInput();
 
         system("cls");
         if (loginUsername.empty()) { return; }
@@ -99,7 +99,7 @@ void login(vector<shared_ptr<Account>> &accounts, shared_ptr<Account> &targetAcc
     else if (option == '2') {
         cout << "[ESC] Back to login menu" << endl;
         cout << "\nUnique id: ";
-        string temp = getUniqueIdInput();
+        string temp = getInput();
 
         system("cls");
         if (temp.empty()) { return; }

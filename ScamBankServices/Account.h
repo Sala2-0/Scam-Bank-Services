@@ -42,6 +42,12 @@ class Account {
     int getUniqueId() const;
     std::string getPassword() const;
     double getBalance() const;
+
+    const std::vector<std::string>& getTransactionHistory() const;
+
+    // Setters
+    void setUniqueId(int id);
+    void setBalance(double amount);
 };
 
 #endif

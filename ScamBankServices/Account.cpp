@@ -29,6 +29,10 @@ Account::Account(const std::string user, const std::string pass)
     std::cout << "Balance: " << balance << std::endl;
 }
 
+// Destructor
+// Destroys an account object when it goes out of scope
+Account::~Account() {}
+
 // Deposit
 // Simple deposit method
 // Takes "amount" as argument and adds to balance
@@ -91,3 +95,9 @@ std::string Account::getUsername() const { return username; }
 int Account::getUniqueId() const { return uniqueId; }
 std::string Account::getPassword() const { return password; }
 double Account::getBalance() const { return balance; }
+
+const std::vector<std::string>& Account::getTransactionHistory() const { return transactionHistory; }
+
+// Setters
+void Account::setUniqueId(int id) { uniqueId = id; }
+void Account::setBalance(double amount) { balance = amount; }

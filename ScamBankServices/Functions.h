@@ -81,33 +81,109 @@ std::string encryptPassword() {
     return password;
 }
 
+// Cancel input? function
+// input - varaible to store whatever input user inputs then returns to caller once function is done
+// ch - variable to store and delete user input based on their actions
+
+// This function is basically the same as "cin >> input" but is implemented to let the user
+//      cancel the prompt if they regret choosing this option
+std::string getInput() {
+    std::string input;
+    char ch;
+
+    while ((ch = _getch()) != '\r') {   // '\r' is Enter key
+        if (ch == 27) { return ""; }    // 27 is ASCII code for ESC key , ESC key pressed, return empty string
+
+        if (ch == '\b') {               // Handle backspace
+            if (!input.empty()) {
+                std::cout << "\b \b";   // Erase character from console
+                input.pop_back();
+            }
+        }
+
+        else {
+            input.push_back(ch);
+            std::cout << ch;
+        }
+    }
+
+    std::cout << std::endl;
+    return input;
+}
+
+// Helper function for "getValidAmount()"
+// hasDecimal - boolean to store true or false if "input" has decimals
+
+// This function is a helper function for "getValidAmount()" and checks if the inputted string is a legit digit or
+//      letters or a mix of both
+bool isValidNumber(const std::string& input) {
+    bool hasDecimal = false;
+
+    for (size_t i = 0; i < input.length(); ++i) {
+        // Check if character is a digit or decimal point
+        if (std::isdigit(input[i])) { continue; }
+
+        // Allow only one decimal point
+        if (input[i] == '.' && !hasDecimal) { hasDecimal = true; }
+
+        // If it's the first character, allow a negative sign
+        else if (input[i] == '-' && i == 0) { continue; }
+
+        // If any other character is not valid
+        else { return false; }
+    }
+
+    return !input.empty(); // Ensure input is not empty
+}
+
 // Fail check function for deposit and withdraw
+// input - the string input user inputs to later be converted to "amount" if it's legal
 // amount - the variable that stores users amount and returns to caller
 
 // This function is used when a variable storing amount user inputs calls this function that fail checks
 //      until user types in a legal datatype (double for this case)
 double getValidAmount() {
+    std::string input;
     double amount;
 
     // Exits this loop once user correctly enters amount
     while (true) {
-        std::cout << "Amount: ";
-        std::cin >> amount;
+        std::cout << "[ESC] Return" << std::endl;
+        std::cout << " \nAmount: ";
+        input = getInput();
 
-        // Fail check
-        if (std::cin.fail()) {
+        if (input.empty()) { return -100; }
+
+        // Check if the input is a valid number
+        if (!isValidNumber(input)) {
             std::cout << "Incorrect format" << std::endl;
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            pause(1);
+
+            pause(2);
+            system("cls");
+            continue;
+        }
+
+        // Convert the valid input string to a double
+        try {
+            amount = std::stod(input); // std::stod converts string to double
+        }
+        catch (const std::exception&) {
+            std::cout << "Conversion error" << std::endl;
+            
+            pause(2);
+            system("cls");
+            continue;
+        }
+
+        // Check if amount is valid (non-negative)
+        if (amount <= 0) {
+            std::cout << "Cannot input negative numbers or 0" << std::endl;
+
+            pause(2);
             system("cls");
         }
-        
-        else {
-            break;
-        }
+        else { return amount; } // returns amount to caller
     }
-    return amount; // returns amount to caller
 }
 
 // Check if username is duplicate
@@ -144,98 +220,6 @@ void transactionHistoryFunction(Account &acc, const std::string &x, double amoun
     std::string str = x + stream.str(); // Concatenates x (+ or -) and the converted double
 
     acc.addTransactionHistory(str);     // Calls member method for acc to add this transaction history to vector "transactionHisory"
-}
-
-// Cancel username input? function
-// username - varaible to store username user inputs then returns to caller once function is done
-// ch - variable to store and delete user input based on their actions
-
-// This function is basically the same as "cin >> username" but is implemented to let the user
-//      cancel the prompt if they regret choosing this option
-std::string getUsernameInput() {
-    std::string username;
-    char ch;
-
-    while ((ch = _getch()) != '\r') {   // '\r' is Enter key
-        if (ch == 27) { return ""; }    // 27 is ASCII code for ESC key , ESC key pressed, return empty string
-
-        if (ch == '\b') {               // Handle backspace
-            if (!username.empty()) {
-                std::cout << "\b \b";   // Erase character from console
-                username.pop_back();
-            }
-        }
-
-        else {
-            username.push_back(ch);
-            std::cout << ch;
-        }
-    }
-
-    std::cout << std::endl;
-    return username;
-}
-
-// Cancel password input? function
-// password - varaible to store password user inputs then returns to caller once function is done
-// ch - variable to store and delete user input based on their actions
-
-// This function is basically the same as "cin >> password" but is implemented to let the user
-//      cancel the prompt if they regret choosing this option
-// Works similarly to "getUsernameInput()"
-std::string getPasswordInput() {
-    std::string password;
-    char ch;
-
-    while ((ch = _getch()) != '\r') {   // '\r' is Enter key
-        if (ch == 27) { return ""; }    // 27 is ASCII code for ESC key , ESC key pressed, return empty string
-
-        if (ch == '\b') {               // Handle backspace
-            if (!password.empty()) {
-                std::cout << "\b \b";   // Erase character from console
-                password.pop_back();
-            }
-        }
-
-        else {
-            password.push_back(ch);
-            std::cout << ch;
-        }
-    }
-
-    std::cout << std::endl;
-    return password;
-}
-
-// Cancel unique id input? function
-// uniqueId - varaible to store uniqueId user inputs then returns to caller once function is done
-// ch - variable to store and delete user input based on their actions
-
-// This function is basically the same as "cin >> password" but is implemented to let the user
-//      cancel the prompt if they regret choosing this option
-// Works similarly to "getUsernameInput()" and "getPasswordInput()"
-std::string getUniqueIdInput() {
-    std::string uniqueId;
-    char ch;
-
-    while ((ch = _getch()) != '\r') {   // '\r' is Enter key
-        if (ch == 27) { return ""; }    // ESC key pressed, return empty string
-        
-        if (ch == '\b') {               // Handle backspace
-            if (!uniqueId.empty()) {
-                std::cout << "\b \b";   // Erase character from console
-                uniqueId.pop_back();
-            }
-        }
-        
-        else if (isdigit(ch)) {         // Only allow numeric input
-            uniqueId.push_back(ch);
-            std::cout << ch;
-        }
-    }
-
-    std::cout << std::endl;
-    return uniqueId;
 }
 
 #endif

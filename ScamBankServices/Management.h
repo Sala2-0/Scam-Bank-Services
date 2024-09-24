@@ -18,10 +18,11 @@ This file exists to create a logged in function that gets called in 'main.cpp' i
 // User defined files
 #include "Account.h"
 #include "Functions.h"
+#include "AccountStoring.h"
 
 using namespace std;
 
-void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option) {
+void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option, vector<shared_ptr<Account>> &accounts) {
     if (loggedIn) {
         while (loggedIn) {
 
@@ -49,9 +50,13 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
             // Option -- Deposit
             if (option == 'd') {
                 double depositAmount = getValidAmount();
-                    
+                system("cls");
+
+                // "Ignore" function if user presses ESC key so function below doesn't activate
+                if (depositAmount == -100) { continue; }
+
                 // Minimum desposit amount is 200
-                if (depositAmount < 200.0) {
+                else if (depositAmount < 200.0) {
                     cout << "Cannot deposit - minimum amount is 200" << endl;
 
                     pause(2);
@@ -68,10 +73,16 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
             // Option -- Withdraw
             else if (option == 'w') {
                 double withdrawAmount = getValidAmount();
-                    
+                system("cls");
+
+                // "Ignore" function if user presses ESC key so function below doesn't activate
+                if (withdrawAmount == -100) { continue; }
+
                 // Withdrawing
-                withdrawFunction(*targetAccount, withdrawAmount);
-                transactionHistoryFunction(*targetAccount, "-", withdrawAmount);
+                else {
+                    withdrawFunction(*targetAccount, withdrawAmount);
+                    transactionHistoryFunction(*targetAccount, "-", withdrawAmount);
+                }
             }
 
             // Option -- Transaction history
@@ -97,6 +108,8 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
                 loggedIn = false;
                 system("cls");
             }
+
+            saveAccountsToFile(accounts);
         }
     }
 }
