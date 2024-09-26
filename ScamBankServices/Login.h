@@ -14,6 +14,7 @@ This file exists to create a login function that gets called in 'main.cpp' inste
 #include <memory>
 #include <vector>
 #include <conio.h>
+#include <string>
 
 // User defined files
 #include "Account.h"

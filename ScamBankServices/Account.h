@@ -11,17 +11,18 @@ This file is the declaration of "Account" class
 #include <vector>
 
 class Account {
-    private:
-    std::string username;
-    std::string password;
+private:
     int uniqueId;
     double balance;
 
-    bool locked;
-
     std::vector<std::string> transactionHistory;
 
-    public:
+protected:
+    std::string username;
+    std::string password;
+
+public:
+    Account();
     Account(const std::string user, const std::string pass);
     ~Account();
 

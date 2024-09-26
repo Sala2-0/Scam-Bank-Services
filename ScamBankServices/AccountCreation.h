@@ -14,6 +14,7 @@ This file exists to create an account creation function that gets called in 'mai
 #include <memory>
 #include <vector>
 #include <conio.h>
+#include <string>
 
 // User defined files
 #include "Account.h"
