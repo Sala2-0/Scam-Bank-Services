@@ -9,11 +9,13 @@ This file is the declaration of "Account" class
 
 #include <string>
 #include <vector>
+#include <string>
 
 class Account {
 private:
     int uniqueId;
     double balance;
+    bool accountFrozen;
 
     std::vector<std::string> transactionHistory;
 
@@ -21,9 +23,11 @@ protected:
     std::string username;
     std::string password;
 
+    std::string reasonForFreeze;
+
 public:
     Account();
-    Account(const std::string user, const std::string pass);
+    Account(const std::string user, const std::string pass, const std::string accountStatus = "false", const std::string reason = "");
     ~Account();
 
     // Deposit
@@ -46,9 +50,13 @@ public:
 
     const std::vector<std::string>& getTransactionHistory() const;
 
+    bool getAccountStatus() const;
+    std::string getFreezeReason() const;
+
     // Setters
     void setUniqueId(int id);
     void setBalance(double amount);
+    void freezeAccount(const std::string &reason);
 };
 
 #endif

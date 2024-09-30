@@ -45,9 +45,10 @@ int main() {
     shared_ptr<Account> targetAccount = nullptr;
     shared_ptr<Admin> targetAdmin = nullptr;
 
-    admins.push_back(make_shared<Admin>("Yurizono Seia", "12343"));
-    saveAdminsToFile(admins);
+    // admins.push_back(make_shared<Admin>("Yurizono_Seia", "Void"));
+    // saveAdminsToFile(admins);
 
+    pause(2);
     system("cls"); // Clean console after loading data from "accounts.txt"
 
     do {

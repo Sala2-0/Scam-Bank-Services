@@ -26,15 +26,23 @@ void saveAccountsToFile(const std::vector<std::shared_ptr<Account>>& accounts) {
     }
 
     for (const auto& account : accounts) {
+        outFile << std::boolalpha; // text file displays true/false instead of 1/0
         // Write account details in the following format: username password uniqueId balance
         outFile << account->getUsername() << " "
                 << account->getPassword() << " "
                 << account->getUniqueId() << " "
-                << account->getBalance() << "\n";
+                << account->getBalance() << " "
+                << account->getAccountStatus() << "\n";
+
+        // Get freeze reason
+        outFile << account->getFreezeReason() << "\n";
+        outFile << "CLOSE\n"; 
 
         // Write transaction history
-        for (const auto& transaction : account->getTransactionHistory()) {
-            outFile << transaction << "\n";
+        if (account->getTransactionHistory().size() != 0) {
+            for (const auto& transaction : account->getTransactionHistory()) {
+                outFile << transaction << "\n";
+            }
         }
 
         outFile << "END\n";  // Mark the end of the account's transaction history
@@ -58,17 +66,21 @@ void loadAccountsFromFile(std::vector<std::shared_ptr<Account>>& accounts) {
         std::string username, password;
         int uniqueId;
         double balance;
+        std::string locked;
 
         // Read account data
-        ss >> username >> password >> uniqueId >> balance;
+        ss >> username >> password >> uniqueId >> balance >> locked;
 
         // Create a new account and set its data
-        std::shared_ptr<Account> account = std::make_shared<Account>(username, password);
+        std::shared_ptr<Account> account = std::make_shared<Account>(username, password, locked);
         account->setUniqueId(uniqueId);  // Need to add setter for UniqueID in Account class
         account->setBalance(balance);    // Need to add setter for Balance in Account class
 
+        // Read
+
         // Read transaction history
         while (std::getline(inFile, line) && line != "END") {
+            if (line == "CLOSE" || line == " ") { continue; } // Ignore "CLOSE" used for freeze message
             account->addTransactionHistory(line);  // Add transaction to the account
         }
 
@@ -92,12 +104,14 @@ void saveAdminsToFile(std::vector<std::shared_ptr<Admin>>& admins) {
         return;
     }
 
-    
     for (const auto& account : admins) {
+        outFile << std::boolalpha; // text file displays true/false instead of 1/0
         // Write account details in the following format: username password uniqueId balance
-        outFile << account->getUsername() << " " << account->getPassword() << "\n";
+        outFile << account->getUsername() << " "
+                << account->getPassword() << " "
+                << account->getLoginAttempts() << " "
+                << account->getAccountStatus() << "\n";
     }
-    
 
     outFile.close();
 }
@@ -114,13 +128,13 @@ void loadAdminsFromFile(std::vector<std::shared_ptr<Admin>>& admins) {
     std::string line;
     while (std::getline(inFile, line)) {
         std::stringstream ss(line);
-        std::string username, password;
+        std::string username, password, attempts, locked;
 
         // Read account data
-        ss >> username >> password;
+        ss >> username >> password >> attempts >> locked;
 
         // Create a new admin and set its data
-        std::shared_ptr<Admin> admin = std::make_shared<Admin>(username, password);
+        std::shared_ptr<Admin> admin = std::make_shared<Admin>(username, password, attempts, locked);
 
         // Add the admin account to the vector
         admins.push_back(admin);

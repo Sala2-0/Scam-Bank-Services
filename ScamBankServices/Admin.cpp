@@ -13,10 +13,14 @@
 #include "AccountStoring.h"
 
 // Constructor
-Admin::Admin(const std::string& user, const std::string& pass)
-: Account{user, pass} {
+Admin::Admin(const std::string& user, const std::string& pass, const std::string& attempts, const std::string& locked)
+: Account{user, pass}, loginAttempts{0}, locked{false}, maxAttempts{3} {
         setBalance(0.0);
         setUniqueId(0);
+
+        if (locked == "true") { lockAccount(); }
+        loginAttempts = std::stoi(attempts);
+            
 }
 
 // Access all accounts data from "accounts" vector in "main.cpp"
@@ -30,17 +34,18 @@ void Admin::viewAllAccounts(const std::vector<std::shared_ptr<Account>>& account
 }
 
 // Security functions
-void Admin::incrementLoginAttempt() { loginAttempt++; }
+void Admin::incrementLoginAttempt() { loginAttempts++; }
 void Admin::lockAccount() { locked = true; }
-void Admin::resetAttempts() { loginAttempt = 0; }
+void Admin::resetAttempts() { loginAttempts = 0; }
 
-int Admin::getLoginAttempt() { return loginAttempt; }
+// Getters
+int Admin::getLoginAttempts() { return loginAttempts; }
 bool Admin::getAccountStatus() { return locked; }; // Locked or unlocked
 
 // ===== NORMAL FUNCTIONS =====
 
 // Login function
-void adminLogin(std::vector<std::shared_ptr<Admin>>& admins, bool adminLoggedIn, std::shared_ptr<Admin> targetAdmin) {
+void adminLogin(std::vector<std::shared_ptr<Admin>> &admins, bool &adminLoggedIn, std::shared_ptr<Admin> &targetAdmin) {
     bool accountFound {false};
     std::string password;
     
@@ -82,8 +87,10 @@ void adminLogin(std::vector<std::shared_ptr<Admin>>& admins, bool adminLoggedIn,
         if (loginPassword.empty()) { return; }
         
         // Admin account is locked
-        if (loginPassword == password && targetAdmin->getAccountStatus()) {
+        if (targetAdmin->getAccountStatus()) {
             std::cout << "Account locked! No access allowed" << std::endl;
+            targetAdmin = nullptr;
+
             pause(2);
             system("cls");
         }
@@ -93,6 +100,8 @@ void adminLogin(std::vector<std::shared_ptr<Admin>>& admins, bool adminLoggedIn,
             adminLoggedIn = true;
             std::cout << "Logged in as " << targetAdmin->getUsername() << std::endl;
             targetAdmin->resetAttempts();
+            adminLoggedIn = true;
+            saveAdminsToFile(admins);
 
             pause(2);
             system("cls");
@@ -102,18 +111,24 @@ void adminLogin(std::vector<std::shared_ptr<Admin>>& admins, bool adminLoggedIn,
         else {
             std::cout << "Incorrect password" << std::endl;
             targetAdmin->incrementLoginAttempt();
+            saveAdminsToFile(admins);
+
             pause(1);
             system("cls");
-        }
 
-        // Too many login attempts detected
-        if (targetAdmin->getLoginAttempt() > targetAdmin->maxAttempts) {
-            std::cout << "Anomaly detected - Too many login attempts" << std::endl;
-            std::cout << "Locking account..." << std::endl;
-            targetAdmin->lockAccount();
+            // Too many login attempts detected
+            if (targetAdmin->getLoginAttempts() > targetAdmin->maxAttempts) {
+                std::cout << "Anomaly detected - Too many login attempts" << std::endl;
+                std::cout << "Locking account..." << std::endl;
+                targetAdmin->lockAccount();
+                targetAdmin = nullptr;
+                saveAdminsToFile(admins);
 
-            pause(2);
-            system("cls");
+                pause(2);
+                system("cls");
+            }
+
+            targetAdmin = nullptr;
         }
     }
 }

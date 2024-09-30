@@ -42,7 +42,19 @@ void accountCreation(vector<shared_ptr<Account>> &accounts) {
             system("cls");
             continue;
         }
-        break;
+
+        bool hasWhiteSpaces = false;
+        for (const auto& str : username) {
+            if (str == ' ') {
+                cout << "No whitespaces allowed" << endl;
+                hasWhiteSpaces = true;
+
+                pause(1);
+                system("cls");
+            }
+        }
+
+        if (!hasWhiteSpaces) { break; }
     }
 
     system("cls");
@@ -80,6 +92,10 @@ void accountCreation(vector<shared_ptr<Account>> &accounts) {
     // Constructor when account created
     accounts.push_back(make_shared<Account>(username, password));
     saveAccountsToFile(accounts);
+
+    cout << "Account: " << accounts.back()->getUsername() << " has been created." << endl;
+    cout << "Unique user ID: " << accounts.back()->getUniqueId() << endl;
+    cout << "Balance: " << accounts.back()->getBalance() << endl;
 
     pause(2);
     system("cls");

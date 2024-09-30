@@ -41,12 +41,16 @@ void depositFunction(Account &acc, double amount) {
 // acc - reference to Account object
 // amount - amount input from user
 
+// transactionHistoryFunction declaration to be used in "withdrawFunction"
+void transactionHistoryFunction(Account &acc, const std::string &x, double amount);
+
 // This function does the same as "depositFunction()" from above but with the differece that it deducts
 //      from acc instead of addition
 void withdrawFunction(Account &acc, double amount) {
     if (acc.withdraw(amount)) {
         std::cout << "Withdraw successful!" << std::endl;
-
+        transactionHistoryFunction(acc, "-", amount);
+        
         pause(2);
         system("cls");
     }

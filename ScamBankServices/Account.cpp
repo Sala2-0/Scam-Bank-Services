@@ -22,11 +22,9 @@ std::uniform_int_distribution<> id(000000, 999999);
 // Initializes userame and password with arguments, balance to default which is 10000.0
 // Unique id initialized by random id generator above with "id(gen)""
 // Outputs account information after construction
-Account::Account(const std::string user, const std::string pass)
-: username{user}, password{pass}, uniqueId{id(gen)}, balance{10000.0} {
-    std::cout << "Account: " << username << " has been created." << std::endl;
-    std::cout << "Unique user ID: " << uniqueId << std::endl;
-    std::cout << "Balance: " << balance << std::endl;
+Account::Account(const std::string user, const std::string pass, const std::string accountStatus, const std::string reason)
+: uniqueId{id(gen)}, balance{10000.0}, accountFrozen{false}, username{user}, password{pass}, reasonForFreeze{""} {
+    if (accountStatus == "true") { freezeAccount(reason); }
 }
 
 // Destructor
@@ -98,6 +96,13 @@ double Account::getBalance() const { return balance; }
 
 const std::vector<std::string>& Account::getTransactionHistory() const { return transactionHistory; }
 
+bool Account::getAccountStatus() const { return accountFrozen; }
+std::string Account::getFreezeReason() const { return reasonForFreeze; }
+
 // Setters
 void Account::setUniqueId(int id) { uniqueId = id; }
 void Account::setBalance(double amount) { balance = amount; }
+void Account::freezeAccount(const std::string &reason) {
+    accountFrozen = true;
+    reasonForFreeze = reason;
+}

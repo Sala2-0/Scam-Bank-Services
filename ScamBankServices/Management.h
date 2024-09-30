@@ -25,6 +25,28 @@ using namespace std;
 void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option, vector<shared_ptr<Account>> &accounts) {
     if (loggedIn) {
         while (loggedIn) {
+            if (targetAccount->getAccountStatus()) {
+                cout << "=== Scam Bank Services ===" << endl;
+                cout << "\nYour account has been frozen" << endl;
+                cout << "\n= Reason =" << endl;
+                cout << targetAccount->getFreezeReason() << endl;;
+
+                cout << "\n[l] Log out" << endl;
+
+                while (true) {
+                    option = _getch();
+
+                    if (option == 'l') {
+                        cout << "Logging out..." << endl;
+                        pause(2);
+
+                        targetAccount = nullptr;
+                        loggedIn = false;
+                        system("cls");
+                        break;
+                    }
+                }
+            }
 
             // Account management menu
             cout << "=== Scam Bank Services ===" << endl;
@@ -63,6 +85,13 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
                     system("cls");
                 }
 
+                else if (depositAmount > 30000.0) {
+                    cout << "Cannot deposit - maximum amount is 30000" << endl;
+
+                    pause(2);
+                    system("cls");
+                }
+
                 // Depositing
                 else {
                     depositFunction(*targetAccount, depositAmount);
@@ -81,7 +110,6 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
                 // Withdrawing
                 else {
                     withdrawFunction(*targetAccount, withdrawAmount);
-                    transactionHistoryFunction(*targetAccount, "-", withdrawAmount);
                 }
             }
 
