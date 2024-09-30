@@ -18,7 +18,7 @@ This file has function definitions for account storing and loading
 
 // Save account data to "accounts.txt"
 void saveAccountsToFile(const std::vector<std::shared_ptr<Account>>& accounts) {
-    std::ofstream outFile("Account storage/accounts.txt");
+    std::ofstream outFile("C:/Users/Deltagare/Downloads/folder/Account storage/accounts.txt");
 
     if (!outFile) {
         std::cerr << "Error opening file for writing!" << std::endl;
@@ -53,7 +53,7 @@ void saveAccountsToFile(const std::vector<std::shared_ptr<Account>>& accounts) {
 
 // Load account data from "accounts.txt"
 void loadAccountsFromFile(std::vector<std::shared_ptr<Account>>& accounts) {
-    std::ifstream inFile("Account storage/accounts.txt");
+    std::ifstream inFile("C:/Users/Deltagare/Downloads/folder/Account storage/accounts.txt");
 
     if (!inFile) {
         std::cerr << "Error opening file for reading!" << std::endl;
@@ -76,11 +76,13 @@ void loadAccountsFromFile(std::vector<std::shared_ptr<Account>>& accounts) {
         account->setUniqueId(uniqueId);  // Need to add setter for UniqueID in Account class
         account->setBalance(balance);    // Need to add setter for Balance in Account class
 
-        // Read
+        // Read freeze message
+        while (std::getline(inFile, line) && line != "CLOSE") {
+            account->setFreezeReason(line); // Set freeze reason to "reasonForFreeze"
+        }
 
         // Read transaction history
         while (std::getline(inFile, line) && line != "END") {
-            if (line == "CLOSE" || line == " ") { continue; } // Ignore "CLOSE" used for freeze message
             account->addTransactionHistory(line);  // Add transaction to the account
         }
 
@@ -97,7 +99,7 @@ void loadAccountsFromFile(std::vector<std::shared_ptr<Account>>& accounts) {
 
 // Save admin account data to file
 void saveAdminsToFile(std::vector<std::shared_ptr<Admin>>& admins) {
-    std::ofstream outFile("Account storage/admins.txt");
+    std::ofstream outFile("C:/Users/Deltagare/Downloads/folder/Account storage/admins.txt");
 
     if (!outFile) {
         std::cerr << "Error opening file for writing!" << std::endl;
@@ -118,7 +120,7 @@ void saveAdminsToFile(std::vector<std::shared_ptr<Admin>>& admins) {
 
 // Load admin account data from file
 void loadAdminsFromFile(std::vector<std::shared_ptr<Admin>>& admins) {
-    std::ifstream inFile("Account storage/admins.txt");
+    std::ifstream inFile("C:/Users/Deltagare/Downloads/folder/Account storage/admins.txt");
 
     if (!inFile) {
         std::cerr << "Error opening file for reading!" << std::endl;

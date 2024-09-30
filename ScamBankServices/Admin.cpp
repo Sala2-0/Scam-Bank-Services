@@ -100,7 +100,6 @@ void adminLogin(std::vector<std::shared_ptr<Admin>> &admins, bool &adminLoggedIn
             adminLoggedIn = true;
             std::cout << "Logged in as " << targetAdmin->getUsername() << std::endl;
             targetAdmin->resetAttempts();
-            adminLoggedIn = true;
             saveAdminsToFile(admins);
 
             pause(2);

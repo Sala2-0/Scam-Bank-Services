@@ -43,7 +43,7 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
                         targetAccount = nullptr;
                         loggedIn = false;
                         system("cls");
-                        break;
+                        return;
                     }
                 }
             }

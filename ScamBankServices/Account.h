@@ -54,8 +54,13 @@ public:
     std::string getFreezeReason() const;
 
     // Setters
+
+    // For account storing functions
     void setUniqueId(int id);
     void setBalance(double amount);
+    void setFreezeReason(const std::string reason);
+
+    // For mainstream functions
     void freezeAccount(const std::string &reason);
 };
 

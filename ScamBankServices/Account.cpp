@@ -4,10 +4,15 @@ Account implementation file
 This file is the implementation of "Account" class member methods
 */
 
+#define _CRT_SECURE_NO_WARNINGS // Avoid error for "localtime()"
+
 #include <iostream>
 #include <string>
 #include <random>
 #include <ctime>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 
 // User defined files
 #include "Account.h"
@@ -58,17 +63,28 @@ bool Account::withdraw(double amount) {
 // Adds current time of deposit or withdrawal to history
 // If "transactionHistory"'s size is bigger than 5, method will delete index 0 (oldest recent transaction)
 void Account::addTransactionHistory(const std::string &history) {
+    // Fetch current time using <chrono>
+    auto now = std::chrono::system_clock::now();
 
-    time_t now = time(&now);                    // Fetch current time on computer
-    std::string timestamp = ctime(&now);        // Convert to human readable form
-    timestamp.pop_back();                       // Remove newline character at the end
+    // Convert to time_t for formatting
+    std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
 
-    std::string transaction = history + " - " + timestamp; // The final string to be pushed back to "transactionHistory"
+    // Convert to tm structure for local time
+    std::tm* localTime = localtime(&currentTime);
 
+    // Create a string stream to format the time
+    std::ostringstream oss;
+    oss << std::put_time(localTime, "%Y-%m-%d %H:%M:%S");  // Format the timestamp as YYYY-MM-DD HH:MM:SS
+
+    // Combine the transaction history with the formatted timestamp
+    std::string transaction = history + " - " + oss.str(); // The final string to be pushed back to "transactionHistory"
+
+    // Ensure transactionHistory size is limited to 5 entries
     if (transactionHistory.size() == 5) {
-        transactionHistory.erase(transactionHistory.begin());   // Remove oldest recent transaction if bigger than 5
+        transactionHistory.erase(transactionHistory.begin()); // Remove the oldest transaction
     }
 
+    // Add the new transaction with the timestamp to the history
     transactionHistory.push_back(transaction);
 }
 
@@ -100,8 +116,13 @@ bool Account::getAccountStatus() const { return accountFrozen; }
 std::string Account::getFreezeReason() const { return reasonForFreeze; }
 
 // Setters
+
+// For account storing functions
 void Account::setUniqueId(int id) { uniqueId = id; }
 void Account::setBalance(double amount) { balance = amount; }
+void Account::setFreezeReason(const std::string reason) { reasonForFreeze = reason; }
+
+// For mainstream functions
 void Account::freezeAccount(const std::string &reason) {
     accountFrozen = true;
     reasonForFreeze = reason;
