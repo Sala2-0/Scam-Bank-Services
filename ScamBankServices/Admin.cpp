@@ -13,6 +13,11 @@
 #include "AccountStoring.h"
 
 // Constructor
+// Arguments listed in order:
+//      - username
+//      - password
+//      - attempts (number of login attempts)
+//      - locked (string that will either store true or false (if true will lock account according to curly braces below))
 Admin::Admin(const std::string& user, const std::string& pass, const std::string& attempts, const std::string& locked)
 : Account{user, pass}, loginAttempts{0}, locked{false}, maxAttempts{3} {
         setBalance(0.0);
@@ -24,6 +29,12 @@ Admin::Admin(const std::string& user, const std::string& pass, const std::string
 }
 
 // Access all accounts data from "accounts" vector in "main.cpp"
+// Args listed in order:
+//      - accounts (takes the vector of shared_ptrs from main.cpp to iterate through)¨
+
+// This method is a way for admin accounts to view details of every account that exists
+// Will display username, unique id as well as balance, account status (banned or not)
+//      and if current account is banned will also display the reason
 void Admin::viewAllAccounts(const std::vector<std::shared_ptr<Account>>& accounts) const {
     std::cout << "Accounts:" << std:: endl;
     for (const auto& account : accounts) {
@@ -39,6 +50,7 @@ void Admin::viewAllAccounts(const std::vector<std::shared_ptr<Account>>& account
 }
 
 // Security functions
+// These are as secority when someone tries to repeatedly log in with wrong passwords
 void Admin::incrementLoginAttempt() { loginAttempts++; }
 void Admin::lockAccount() { locked = true; }
 void Admin::resetAttempts() { loginAttempts = 0; }
@@ -50,6 +62,10 @@ bool Admin::getAccountStatus() { return locked; }; // Locked or unlocked
 // ===== NORMAL FUNCTIONS =====
 
 // Login function
+// Args listed in order:
+//      - &admins (takes vector from main.cpp containing shared_ptr of Admin class to iterate through)
+//      - &adminLoggedIn (boolean to change its value for adminManagement() in main.cpp to handle later)
+//      - &targetAdmin (shared_ptr of Admin class. Will point tothe specific logged in account for adminManagement() in main.cpp to handle later)
 void adminLogin(std::vector<std::shared_ptr<Admin>> &admins, bool &adminLoggedIn, std::shared_ptr<Admin> &targetAdmin) {
     bool accountFound {false};
     std::string password;

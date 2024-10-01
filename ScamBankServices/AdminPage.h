@@ -13,6 +13,13 @@
 
 using namespace std;
 
+// Admin management function
+// Args listed in order:
+//      - &targetAdmin (shared ptr of Admin class. Should be pointing to user's logged in account after login)
+//      - &adminLoggedIn (boolean to check wether logged in or not to continue or return from function)
+//      - &accounts (accounts vector from main.cpp to be able to modify the different accounts)
+
+// This function serves as a menu for administrators and contains sensitive admin features which only admin accounts have access to
 void adminManagement(shared_ptr<Admin> &targetAdmin, bool &adminLoggedIn, char &option, vector<shared_ptr<Account>> &accounts) {
     if (adminLoggedIn) {
         while (adminLoggedIn) {

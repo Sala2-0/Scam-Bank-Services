@@ -43,6 +43,7 @@ void accountCreation(vector<shared_ptr<Account>> &accounts) {
             continue;
         }
 
+        // Check for whitespaces
         bool hasWhiteSpaces = false;
         for (const auto& str : username) {
             if (str == ' ') {
@@ -60,7 +61,7 @@ void accountCreation(vector<shared_ptr<Account>> &accounts) {
     system("cls");
     if (username.empty()) { return; } // If ESC is pressed
 
-    // Password creation
+    // --- Password creation ---
     cout << "[ESC] Back to login menu" << endl;
     cout << "\nCreate a password: ";
     string password = getInput();

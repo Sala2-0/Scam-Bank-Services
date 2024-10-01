@@ -25,6 +25,7 @@ void saveAccountsToFile(const std::vector<std::shared_ptr<Account>>& accounts) {
         return;
     }
 
+    // Loop through each account to store data
     for (const auto& account : accounts) {
         outFile << std::boolalpha; // text file displays true/false instead of 1/0
         // Write account details in the following format: username password uniqueId balance
@@ -106,6 +107,7 @@ void saveAdminsToFile(std::vector<std::shared_ptr<Admin>>& admins) {
         return;
     }
 
+    // Loop through each admin account to store data
     for (const auto& account : admins) {
         outFile << std::boolalpha; // text file displays true/false instead of 1/0
         // Write account details in the following format: username password uniqueId balance

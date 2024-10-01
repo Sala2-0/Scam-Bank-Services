@@ -22,6 +22,14 @@ This file exists to create a logged in function that gets called in 'main.cpp' i
 
 using namespace std;
 
+// Management menu function
+// Args listed in order:
+//      - &targetAccount (Reference to shared ptr. Should be pointing to user's logged in account if user logged in)
+//      - &loggedIn (boolean to check if user is logged in or not to continue or return from function)
+//      - &accounts (referenced for account storing functions to be able to save updated data)
+
+// This function is the main menu for logged in users and currently contains menthods like deposit and withdraw 
+//      which will change user's accounts's accordingly
 void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option, vector<shared_ptr<Account>> &accounts) {
     if (loggedIn) {
         while (loggedIn) {

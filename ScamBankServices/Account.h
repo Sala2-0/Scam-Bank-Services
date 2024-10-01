@@ -49,7 +49,7 @@ public:
     double getBalance() const;
 
     const std::vector<std::string>& getTransactionHistory() const;
-
+    
     bool getAccountStatus() const;
     std::string getBanReason() const;
 

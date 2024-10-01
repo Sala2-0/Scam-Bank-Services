@@ -112,17 +112,19 @@ double Account::getBalance() const { return balance; }
 
 const std::vector<std::string>& Account::getTransactionHistory() const { return transactionHistory; }
 
+// Administration getters
+// Administration methods are functions and methods used by admin accounts for administrative
+//      stuff like banning, resetting balances etc
 bool Account::getAccountStatus() const { return banned; }
 std::string Account::getBanReason() const { return reasonForBan; }
 
-// Setters
-
+// --- Setters ---
 // For account storing functions
 void Account::setUniqueId(int id) { uniqueId = id; }
 void Account::setBalance(double amount) { balance = amount; }
 void Account::setBanReason(const std::string reason) { reasonForBan = reason; }
 
-// For mainstream functions
+// For mainstream functions (mostly administration involved)
 void Account::banAccount(const std::string &reason) {
     banned = true;
     reasonForBan = reason;
