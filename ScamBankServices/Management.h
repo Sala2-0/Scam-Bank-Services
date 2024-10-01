@@ -29,7 +29,7 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
                 cout << "=== Scam Bank Services ===" << endl;
                 cout << "\nYour account has been frozen" << endl;
                 cout << "\n= Reason =" << endl;
-                cout << targetAccount->getFreezeReason() << endl;;
+                cout << targetAccount->getBanReason() << endl;;
 
                 cout << "\n[l] Log out" << endl;
 
@@ -37,11 +37,13 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
                     option = _getch();
 
                     if (option == 'l') {
-                        cout << "Logging out..." << endl;
-                        pause(2);
+                        system("cls");
 
+                        cout << "Logging out..." << endl;
                         targetAccount = nullptr;
                         loggedIn = false;
+                        
+                        pause(2);
                         system("cls");
                         return;
                     }

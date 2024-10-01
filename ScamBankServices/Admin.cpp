@@ -29,7 +29,12 @@ void Admin::viewAllAccounts(const std::vector<std::shared_ptr<Account>>& account
     for (const auto& account : accounts) {
         std::cout << "User: " << account->getUsername()
                 << " | Unique id: " << account->getUniqueId()
-                        << " | Balance: " << account->getBalance() << std::endl;
+                << " | Balance: " << account->getBalance() << std::endl;
+        std::cout << "Account status: " << (account->getAccountStatus() ? "Banned" : "Normal") << std::endl;
+        
+        if (account->getAccountStatus()) std::cout << "Reason: " << account->getBanReason() << std::endl;
+
+        std::cout << std::endl;
     }
 }
 

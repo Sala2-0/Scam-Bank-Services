@@ -81,7 +81,7 @@ void adminManagement(shared_ptr<Admin> &targetAdmin, bool &adminLoggedIn, char &
                 if (accountFound) {
                     cout << "== Freeze message ==" << endl;
                     string message = getInput();
-                    target->freezeAccount(message);
+                    target->banAccount(message);
 
                     cout << "User " << target->getUsername() << " has been frozen" << endl;
                     saveAccountsToFile(accounts);

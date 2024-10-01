@@ -28,8 +28,8 @@ std::uniform_int_distribution<> id(000000, 999999);
 // Unique id initialized by random id generator above with "id(gen)""
 // Outputs account information after construction
 Account::Account(const std::string user, const std::string pass, const std::string accountStatus, const std::string reason)
-: uniqueId{id(gen)}, balance{10000.0}, accountFrozen{false}, username{user}, password{pass}, reasonForFreeze{""} {
-    if (accountStatus == "true") { freezeAccount(reason); }
+: uniqueId{id(gen)}, balance{10000.0}, banned{false}, username{user}, password{pass}, reasonForBan{""} {
+    if (accountStatus == "true") { banAccount(reason); }
 }
 
 // Destructor
@@ -112,18 +112,18 @@ double Account::getBalance() const { return balance; }
 
 const std::vector<std::string>& Account::getTransactionHistory() const { return transactionHistory; }
 
-bool Account::getAccountStatus() const { return accountFrozen; }
-std::string Account::getFreezeReason() const { return reasonForFreeze; }
+bool Account::getAccountStatus() const { return banned; }
+std::string Account::getBanReason() const { return reasonForBan; }
 
 // Setters
 
 // For account storing functions
 void Account::setUniqueId(int id) { uniqueId = id; }
 void Account::setBalance(double amount) { balance = amount; }
-void Account::setFreezeReason(const std::string reason) { reasonForFreeze = reason; }
+void Account::setBanReason(const std::string reason) { reasonForBan = reason; }
 
 // For mainstream functions
-void Account::freezeAccount(const std::string &reason) {
-    accountFrozen = true;
-    reasonForFreeze = reason;
+void Account::banAccount(const std::string &reason) {
+    banned = true;
+    reasonForBan = reason;
 }

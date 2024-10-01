@@ -15,7 +15,7 @@ class Account {
 private:
     int uniqueId;
     double balance;
-    bool accountFrozen;
+    bool banned;
 
     std::vector<std::string> transactionHistory;
 
@@ -23,7 +23,7 @@ protected:
     std::string username;
     std::string password;
 
-    std::string reasonForFreeze;
+    std::string reasonForBan;
 
 public:
     Account();
@@ -51,17 +51,17 @@ public:
     const std::vector<std::string>& getTransactionHistory() const;
 
     bool getAccountStatus() const;
-    std::string getFreezeReason() const;
+    std::string getBanReason() const;
 
     // Setters
 
     // For account storing functions
     void setUniqueId(int id);
     void setBalance(double amount);
-    void setFreezeReason(const std::string reason);
+    void setBanReason(const std::string reason);
 
     // For mainstream functions
-    void freezeAccount(const std::string &reason);
+    void banAccount(const std::string &reason);
 };
 
 #endif
