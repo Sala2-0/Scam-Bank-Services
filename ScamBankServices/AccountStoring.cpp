@@ -33,7 +33,8 @@ void saveAccountsToFile(const std::vector<std::shared_ptr<Account>>& accounts) {
                 << account->getPassword() << " "
                 << account->getUniqueId() << " "
                 << account->getBalance() << " "
-                << account->getAccountStatus() << "\n";
+                << account->getAccountStatus() << " "
+                << account->getUnbanDate() << "\n";
 
         // Get freeze reason
         outFile << account->getBanReason() << "\n";
@@ -67,15 +68,18 @@ void loadAccountsFromFile(std::vector<std::shared_ptr<Account>>& accounts) {
         std::string username, password;
         int uniqueId;
         double balance;
-        std::string locked;
+        std::string banned;
+        std::string unbanDate;
+        std::string unbanTime;
 
         // Read account data
-        ss >> username >> password >> uniqueId >> balance >> locked;
+        ss >> username >> password >> uniqueId >> balance >> banned >> unbanDate >> unbanTime;
 
         // Create a new account and set its data
-        std::shared_ptr<Account> account = std::make_shared<Account>(username, password, locked);
-        account->setUniqueId(uniqueId);  // Need to add setter for UniqueID in Account class
-        account->setBalance(balance);    // Need to add setter for Balance in Account class
+        std::shared_ptr<Account> account = std::make_shared<Account>(username, password, banned);
+        account->setUniqueId(uniqueId);
+        account->setBalance(balance);
+        account->setUnbanDate(unbanDate, unbanTime);
 
         // Read freeze message
         while (std::getline(inFile, line) && line != "CLOSE") {

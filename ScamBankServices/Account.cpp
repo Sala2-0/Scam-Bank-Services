@@ -16,6 +16,7 @@ This file is the implementation of "Account" class member methods
 
 // User defined files
 #include "Account.h"
+#include "Functions.h"
 
 // Random unique id generator
 std::random_device rd;
@@ -27,8 +28,9 @@ std::uniform_int_distribution<> id(000000, 999999);
 // Initializes userame and password with arguments, balance to default which is 10000.0
 // Unique id initialized by random id generator above with "id(gen)""
 // Outputs account information after construction
-Account::Account(const std::string user, const std::string pass, const std::string accountStatus, const std::string reason)
-: uniqueId{id(gen)}, balance{10000.0}, banned{false}, username{user}, password{pass}, reasonForBan{""} {
+Account::Account(const std::string user, const std::string pass, const std::string accountStatus, const std::string reason,
+        const std::string unbanDate)
+: uniqueId{id(gen)}, balance{10000.0}, banned{false}, username{user}, password{pass}, reasonForBan{""}, dateOfUnban{unbanDate} {
     if (accountStatus == "true") { banAccount(reason); }
 }
 
@@ -117,15 +119,40 @@ const std::vector<std::string>& Account::getTransactionHistory() const { return 
 //      stuff like banning, resetting balances etc
 bool Account::getAccountStatus() const { return banned; }
 std::string Account::getBanReason() const { return reasonForBan; }
+std::string Account::getUnbanDate() const { return dateOfUnban; }
 
 // --- Setters ---
 // For account storing functions
 void Account::setUniqueId(int id) { uniqueId = id; }
 void Account::setBalance(double amount) { balance = amount; }
 void Account::setBanReason(const std::string reason) { reasonForBan = reason; }
+void Account::setUnbanDate(const std::string date, const std::string time) {
+    dateOfUnban = date +  " " + time;
+}
 
 // For mainstream functions (mostly administration involved)
-void Account::banAccount(const std::string &reason) {
-    banned = true;
-    reasonForBan = reason;
+void Account::banAccount(const std::string &reason, int days) {
+    if (days == 0) {
+        banned = true;
+        reasonForBan = reason;
+    }
+    
+    else {
+        banned = true;
+        reasonForBan = reason;
+
+        dateOfUnban = convertTime(days);
+    }
+}
+
+// Unban account function
+void Account::unbanAccount() {
+    banned = false;
+    reasonForBan = "";
+    dateOfUnban = "none";
+}
+
+// Check if ban is still active function
+bool Account::isBanActive() {
+    return compareWithCurrentDateTime(dateOfUnban);
 }

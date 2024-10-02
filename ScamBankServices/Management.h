@@ -33,11 +33,19 @@ using namespace std;
 void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option, vector<shared_ptr<Account>> &accounts) {
     if (loggedIn) {
         while (loggedIn) {
-            if (targetAccount->getAccountStatus()) {
+            // If date is equal or past the unban date
+            if (targetAccount->isBanActive()) { // If true, unbans account
+                targetAccount->unbanAccount();
+            }
+
+            // Else, display the ban menu
+            else {
                 cout << "=== Scam Bank Services ===" << endl;
-                cout << "\nYour account has been frozen" << endl;
+                cout << "\nYour account has been banned" << endl;
                 cout << "\n= Reason =" << endl;
-                cout << targetAccount->getBanReason() << endl;;
+                cout << targetAccount->getBanReason() << endl;
+
+                cout << "\nYou will be unbanned on " << targetAccount->getUnbanDate() << endl;
 
                 cout << "\n[l] Log out" << endl;
 

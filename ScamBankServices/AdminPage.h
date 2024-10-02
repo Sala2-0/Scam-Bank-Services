@@ -27,7 +27,7 @@ void adminManagement(shared_ptr<Admin> &targetAdmin, bool &adminLoggedIn, char &
             cout << "= " << targetAdmin->getUsername() << " =" << endl;
 
             cout << "\n[1] View all accounts in system" << endl;
-            cout << "[2] Freeze account" << endl;
+            cout << "[2] Ban account" << endl;
 
             cout << "\n[l] Log out" << endl;
 
@@ -86,11 +86,13 @@ void adminManagement(shared_ptr<Admin> &targetAdmin, bool &adminLoggedIn, char &
 
                 // Freeze message
                 if (accountFound) {
-                    cout << "== Freeze message ==" << endl;
-                    string message = getInput();
-                    target->banAccount(message);
+                    int duration = getValidAmountInt();
 
-                    cout << "User " << target->getUsername() << " has been frozen" << endl;
+                    cout << "== Ban message ==" << endl;
+                    string message = getInput();
+                    target->banAccount(message, duration);
+
+                    cout << "User " << target->getUsername() << " has been banned for " << duration << " days" << endl;
                     saveAccountsToFile(accounts);
                     
                     pause(1);

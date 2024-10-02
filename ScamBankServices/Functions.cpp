@@ -12,6 +12,8 @@ This file has function declarations for common functions
 #include <conio.h>
 #include <sstream>
 #include <memory>
+#include <iomanip>
+#include <ctime>
 
 // User defined files
 #include "Account.h"
@@ -194,6 +196,50 @@ double getValidAmount() {
     }
 }
 
+int getValidAmountInt() {
+    std::string input;
+    int amount;
+
+    // Exits this loop once user correctly enters amount
+    while (true) {
+        std::cout << "[ESC] Return" << std::endl;
+        std::cout << " \nDuration (days): ";
+        input = getInput();
+
+        if (input.empty()) { return -100; }
+
+        // Check if the input is a valid number
+        if (!isValidNumber(input)) {
+            std::cout << "Incorrect format" << std::endl;
+
+            pause(2);
+            system("cls");
+            continue;
+        }
+
+        // Convert the valid input string to a double
+        try {
+            amount = std::stoi(input); // std::stod converts string to double
+        }
+        catch (const std::exception&) {
+            std::cout << "Conversion error" << std::endl;
+            
+            pause(2);
+            system("cls");
+            continue;
+        }
+
+        // Check if amount is valid (non-negative)
+        if (amount <= 0) {
+            std::cout << "Cannot input negative numbers or 0" << std::endl;
+
+            pause(2);
+            system("cls");
+        }
+        else { return amount; } // returns amount to caller
+    }
+}
+
 // Check if username is duplicate
 // username - reference to a username string inputted from user
 // accounts - reference to a vector of shared pointers pointing to Account objects
@@ -227,5 +273,71 @@ void transactionHistoryFunction(Account &acc, const std::string &x, double amoun
     stream << std::fixed << amount;     // Converts amount (which is a double) to string
     std::string str = x + stream.str(); // Concatenates x (+ or -) and the converted double
 
-    acc.addTransactionHistory(str);     // Calls member method for acc to add this transaction history to vector "transactionHisory"
+    acc.addTransactionHistory(str);     // Calls member method for acc to add this transaction history to vector "transactionHistory"
+}
+
+
+// Convert integer to real time
+// Args listed in order:
+//      - days (integer to convert to amount of days)
+
+// This function is used to convert an integer argument into amount of days
+// Function will mostly be used for administration purposes like banning accounts
+std::string convertTime(int days) {
+    // Get current time
+    auto now = std::chrono::system_clock::now();
+
+    // Add the specified number of days to the current time
+    auto futureTime  = now + std::chrono::hours(days * 24); // convert days to hours and add
+
+    // Convert to time_t for formatting
+    std::time_t futureTimeT = std::chrono::system_clock::to_time_t(futureTime);
+    
+    // Convert to tm structure for local time
+    std::tm* localTime = std::localtime(&futureTimeT);
+    
+    // Create a string stream to format the date
+    std::ostringstream oss;
+    oss << std::put_time(localTime, "%Y-%m-%d %H:%M:%S");  // Format the date as YYYY-MM-DD HH:MM:SS
+
+    return oss.str();  // Return the formatted date as a string
+}
+
+// Convert a human readable string time to computer time
+
+// This function converts a string of human readable time to computer readable time
+// Mainly used on the function below that compares inputted time to current time
+bool convertStringToTime(const std::string& dateTimeStr, std::tm& timeStruct) {
+    // Create an input string stream to parse the date-time string
+    std::istringstream ss(dateTimeStr);
+    
+    // Parse the string into the time structure with date and time components
+    ss >> std::get_time(&timeStruct, "%Y-%m-%d %H:%M:%S");
+    
+    return !ss.fail();  // Return false if parsing failed
+}
+
+// Compare times function
+// Args listed in order:
+//      -&inputDateTime (this variable is supposed to be the unbanDateTime variable from Account class)
+
+// This function is used as a boolean to check whether an account is still banned or not by comparing the
+//      current time with the date when the account is supposed to be unbanned
+bool compareWithCurrentDateTime(const std::string &inputDateTime) {
+    // Convert the input string to a tm structure
+    std::tm inputTm = {};
+    if (!convertStringToTime(inputDateTime, inputTm)) {
+        std::cerr << "Failed to parse the date-time string!" << std::endl;
+        return false;
+    }
+
+    // Convert input tm structure to time_t
+    std::time_t inputTime = std::mktime(&inputTm);  // Converts tm to time_t
+    
+    // Get the current time and convert it to time_t
+    auto now = std::chrono::system_clock::now();
+    std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+
+    // Compare current time with input time
+    return currentTime >= inputTime;  // Returns true if current time is same or past
 }

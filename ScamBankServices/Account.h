@@ -23,11 +23,14 @@ protected:
     std::string username;
     std::string password;
 
+    // Administrator variables
     std::string reasonForBan;
+    std::string dateOfUnban;
 
 public:
     Account();
-    Account(const std::string user, const std::string pass, const std::string accountStatus = "false", const std::string reason = "");
+    Account(const std::string user, const std::string pass, const std::string accountStatus = "false", const std::string reason = "",
+            const std::string unbanDate = "none");
     ~Account();
 
     // Deposit
@@ -52,6 +55,7 @@ public:
     
     bool getAccountStatus() const;
     std::string getBanReason() const;
+    std::string getUnbanDate() const;
 
     // Setters
 
@@ -59,9 +63,12 @@ public:
     void setUniqueId(int id);
     void setBalance(double amount);
     void setBanReason(const std::string reason);
+    void setUnbanDate(const std::string date, const std::string time);
 
     // For mainstream functions
-    void banAccount(const std::string &reason);
+    void banAccount(const std::string &reason, int days = 0);
+    void unbanAccount();
+    bool isBanActive();
 };
 
 #endif
