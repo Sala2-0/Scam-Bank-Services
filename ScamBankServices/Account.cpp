@@ -60,6 +60,13 @@ bool Account::withdraw(double amount) {
     return false;
 }
 
+// Send money
+// This method sends money to receiver account
+void Account::sendMoney(double amount, Account &receiver) {
+    withdrawFunction(*this, amount);
+    depositFunction(receiver, amount);
+}
+
 // Add transaction history
 // Method for adding transaction history to "transactionHistory" vector after deposit or withdrawaö
 // Adds current time of deposit or withdrawal to history
@@ -127,7 +134,8 @@ void Account::setUniqueId(int id) { uniqueId = id; }
 void Account::setBalance(double amount) { balance = amount; }
 void Account::setBanReason(const std::string reason) { reasonForBan = reason; }
 void Account::setUnbanDate(const std::string date, const std::string time) {
-    dateOfUnban = date +  " " + time;
+    if (date == "none") { dateOfUnban = date; }
+    else { dateOfUnban = date + " " + time; } 
 }
 
 // For mainstream functions (mostly administration involved)
@@ -154,5 +162,6 @@ void Account::unbanAccount() {
 
 // Check if ban is still active function
 bool Account::isBanActive() {
-    return compareWithCurrentDateTime(dateOfUnban);
+    if (dateOfUnban == "none") { return true; }
+    else { return compareWithCurrentDateTime(dateOfUnban); }
 }

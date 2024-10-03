@@ -4,6 +4,8 @@ Functions implementation file
 This file has function declarations for common functions
 */
 
+#define _CRT_SECURE_NO_WARNINGS // For visual studio
+
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -28,40 +30,35 @@ void pause(int seconds) {
 // acc - reference to Account object
 // amount - amount input from user
 
+// transactionHistoryFunction declaration to be used in "withdrawFunction" and "depositFunction"
+void transactionHistoryFunction(Account &acc, const std::string &x, double amount);
+
 // This function calls acc's member method "deposit" to deposit "amount"
 // depposit will return true or false depending on if deposit is successfull
-void depositFunction(Account &acc, double amount) {
+bool depositFunction(Account &acc, double amount) {
     if (acc.deposit(amount)) {
-        std::cout << "Deposit successful!" << std::endl;
+        transactionHistoryFunction(acc, "+", amount);
 
-        pause(2);
-        system("cls");
+        return true;
     }
+
+    return false;
 }
 
 // Withdraw helper function
 // acc - reference to Account object
 // amount - amount input from user
 
-// transactionHistoryFunction declaration to be used in "withdrawFunction"
-void transactionHistoryFunction(Account &acc, const std::string &x, double amount);
-
 // This function does the same as "depositFunction()" from above but with the differece that it deducts
 //      from acc instead of addition
-void withdrawFunction(Account &acc, double amount) {
+bool withdrawFunction(Account &acc, double amount) {
     if (acc.withdraw(amount)) {
-        std::cout << "Withdraw successful!" << std::endl;
         transactionHistoryFunction(acc, "-", amount);
-        
-        pause(2);
-        system("cls");
+
+        return true;
     }
 
-    else {
-        std::cout << "Cannot withdraw - insufficient balance" << std::endl;
-        pause(2);
-        system("cls");
-    }
+    return false;
 }
 
 // Encrypt password with asterisks
@@ -308,13 +305,17 @@ std::string convertTime(int days) {
 // This function converts a string of human readable time to computer readable time
 // Mainly used on the function below that compares inputted time to current time
 bool convertStringToTime(const std::string& dateTimeStr, std::tm& timeStruct) {
-    // Create an input string stream to parse the date-time string
     std::istringstream ss(dateTimeStr);
-    
-    // Parse the string into the time structure with date and time components
     ss >> std::get_time(&timeStruct, "%Y-%m-%d %H:%M:%S");
-    
-    return !ss.fail();  // Return false if parsing failed
+
+    // Check if parsing failed
+    if (ss.fail()) {
+        return false;
+    }
+
+    // Initialize tm_isdst to -1, allowing mktime to determine daylight saving
+    timeStruct.tm_isdst = -1;
+    return true;
 }
 
 // Compare times function
@@ -333,11 +334,27 @@ bool compareWithCurrentDateTime(const std::string &inputDateTime) {
 
     // Convert input tm structure to time_t
     std::time_t inputTime = std::mktime(&inputTm);  // Converts tm to time_t
-    
+
+    if (inputTime == -1) {
+        std::cerr << "Failed to convert input time to time_t!" << std::endl;
+        return false;
+    }
+
     // Get the current time and convert it to time_t
     auto now = std::chrono::system_clock::now();
     std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
 
     // Compare current time with input time
     return currentTime >= inputTime;  // Returns true if current time is same or past
+}
+
+bool findAccount(const std::string username, const std::vector<std::shared_ptr<Account>> &accounts, std::shared_ptr<Account> &receiver) {
+    for (const auto &account : accounts) {
+        if (account->getUsername() == username) {
+            receiver = account;
+            return true;
+        }
+    }
+
+    return false;
 }

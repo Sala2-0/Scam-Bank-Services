@@ -38,6 +38,9 @@ public:
 
     // Withdraw
     bool withdraw(double amount);
+
+    // Send money
+    void sendMoney(double amount, Account &receiver);
     
     // Add transaction history
     void addTransactionHistory(const std::string &history);
@@ -63,7 +66,7 @@ public:
     void setUniqueId(int id);
     void setBalance(double amount);
     void setBanReason(const std::string reason);
-    void setUnbanDate(const std::string date, const std::string time);
+    void setUnbanDate(const std::string date, const std::string time = "");
 
     // For mainstream functions
     void banAccount(const std::string &reason, int days = 0);

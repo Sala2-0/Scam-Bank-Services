@@ -74,6 +74,7 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
 
             cout << "\n[d] Deposit" << endl;
             cout << "[w] Withdraw" << endl;
+            cout << "[s] Send money" << endl;
             cout << "[h] Transaction history" << endl;
 
             cout << "\n[l] Log out" << endl;
@@ -82,7 +83,7 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
             while (true) {
                 option = _getch();
 
-                if (option == 'd' || option == 'w' || option == 'l' || option == 'h') { break; }
+                if (option == 'd' || option == 'w' || option == 'l' || option == 's' || option == 'h') { break; }
             }
 
             system("cls");
@@ -112,8 +113,11 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
 
                 // Depositing
                 else {
-                    depositFunction(*targetAccount, depositAmount);
-                    transactionHistoryFunction(*targetAccount, "+", depositAmount);
+                    
+                    cout << (depositFunction(*targetAccount, depositAmount) ? "Deposit successful!" : "Deposit failed - error") << endl;
+
+                    pause(2);
+                    system("cls");
                 }
             }
 
@@ -127,7 +131,43 @@ void management(shared_ptr<Account> &targetAccount, bool &loggedIn, char &option
 
                 // Withdrawing
                 else {
-                    withdrawFunction(*targetAccount, withdrawAmount);
+                    cout << (withdrawFunction(*targetAccount, withdrawAmount) ? "Withdraw successful!" : "Withdraw failed - insufficient balance") << endl;
+
+                    pause(2);
+                    system("cls");
+                }
+            }
+
+            // Option -- Send money
+            else if (option == 's') {
+                shared_ptr<Account> receiver = nullptr;
+
+                cout << "[ESC] Back to main menu" << endl;
+                
+                cout << "\nUser to send money: ";
+                string username = getInput();
+
+                system("cls");
+
+                if (findAccount(username, accounts, receiver)) {
+                    double amount = getValidAmount();
+
+                    system("cls");
+                    if (amount == -100) { continue; }
+
+                    targetAccount->sendMoney(amount, *receiver);
+
+                    cout << "Sent " << amount << " to " << receiver->getUsername() << endl;
+
+                    pause(2);
+                    system("cls");
+                }
+                
+                else {
+                    cout << "Account not found" << endl;
+
+                    pause(2);
+                    system("cls");
                 }
             }
 
